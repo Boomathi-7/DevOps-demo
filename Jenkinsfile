@@ -12,22 +12,22 @@ pipeline {
 
         stage('Test') {
             steps {
-                bat 'if exist index.html (exit /b 0) else (exit /b 1)'
+                sh 'test -f index.html'
                 echo 'HTML file exists - Test passed.'
             }
         }
 
         stage('Build') {
             steps {
-                bat 'if not exist build mkdir build'
-                bat 'copy /Y index.html build\\index.html'
+                sh 'mkdir -p build'
+                sh 'cp index.html build/index.html'
                 echo 'HTML application built successfully.'
             }
         }
 
         stage('Verification') {
             steps {
-                bat 'if exist build\\index.html (exit /b 0) else (exit /b 1)'
+                sh 'test -f build/index.html'
                 echo 'Build verification passed.'
             }
         }
@@ -37,7 +37,6 @@ pipeline {
         success {
             echo 'CI Pipeline completed successfully!'
         }
-
         failure {
             echo 'CI Pipeline failed. Check the console output.'
         }
